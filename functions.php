@@ -29,19 +29,7 @@
         }
         return ($arr);
     }
-    function sqlupd ($sql): int
-    {
-        global $db;
-        $insert_id = 0;
-        try {
-            $sth = $db->prepare($sql);
-            $sth->execute();
-            $insert_id = $db->lastInsertId();
-        } catch(Exception $e) {
-            ExceptionCatcher($e);
-        }
-        return $insert_id;
-    }
+
     sql_connect(); // соединение с базой.
     // Условия по GET-запросам
 
