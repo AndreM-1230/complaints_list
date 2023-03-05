@@ -36,8 +36,11 @@
     function complaint_list():string
     {
         $complaints_arr=sqltab("SELECT * FROM complaints_list");
-        $return ="<table class='table table-striped' data-tblname='tbl' style='text-align:center;'><tbody>
-            <tr><td>Номер жалобы:</td>
+        $return ="<table class='table
+                         table-hover
+                         table-borderless
+                         align-middle' data-tblname='tbl' style='text-align:center;'><tbody>
+            <tr class='table-dark'><td>Номер жалобы:</td>
                 <td>Содержание:</td>
                 <td>Статус:</td>
                 <td>Пользователь:</td>
@@ -49,9 +52,19 @@
             $status = sqltab("SELECT status_name FROM status WHERE id = $value[status]");
             $return .="<tr>
                 <td>". $value['id'] ."</td>
-                <td>" .  $value['complaint_text'] ." </td>
-                <td>" .  $status[0]['status_name'] ." </td>
-                <td>" .  $user[0]['login'] ." </td>
+                <td>" .  $value['complaint_text'] ." </td>";
+            switch ($status[0]['status_name']){
+                case 'Ожидает':
+                    $return .="<td class='table-light'>" .  $status[0]['status_name'] ." </td>";
+                    break;
+                case 'В работе':
+                    $return .="<td class='table-info'>" .  $status[0]['status_name'] ." </td>";
+                    break;
+                case 'Выполнено':
+                    $return .="<td class='table-success'>" .  $status[0]['status_name'] ." </td>";
+                    break;
+            }
+                $return .="<td>" .  $user[0]['login'] ." </td>
                 <td>" .  $fixer[0]['login'] ." </td>";
                 if($value['fix_comment'] != NULL){
                     $return .="<td>" .  $value['fix_comment'] ." </td>";

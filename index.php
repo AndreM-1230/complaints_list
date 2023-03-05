@@ -62,7 +62,8 @@ if(isset($_SESSION['account']) == 0)
                                   data-bs-target="#exampleModal" value="Войти"/></li>';
                 }
                 else{
-                    echo '<li><a href="check_sign.php" class="navbar-brand text-light">Выйти</a></li>';
+                    echo '<li><a class="navbar-brand text-light">Привет, '.$_SESSION["account"][0]["login"].'!</a></li>
+                          <li><a href="check_sign.php" class="navbar-brand text-light">Выйти</a></li>';
                 }
                 ?>
             </ul>
