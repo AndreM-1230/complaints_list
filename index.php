@@ -2,11 +2,15 @@
 session_start();
 include('env.php');
 include('functions.php');
+include('sign_modal.php');
 ini_set("memory_limit","6000M");
 ini_set('mysql.connect_timeout', 7200); // таймаут соединения с БД (сек.)
 ini_set('max_execution_time', 7200);    // таймаут php-скрипта
 ini_set('display_errors','ON');
+if(isset($_SESSION['account']) == 0)
+    $_SESSION['account'] = null;
 ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -44,14 +48,23 @@ ini_set('display_errors','ON');
         </div>
 
         <div class="navbar-header">
-            <a href="index.php" class="navbar-brand text-light">...</a>
+            <a href="index.php" class="navbar-brand text-light">Жалобы</a>
         </div>
 
         <div class="navbar-collapse collapse" style="color: #badbcc !important;" id="navbar-main">
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" class="navbar-brand text-light">...</a></li>
-                <li><a href="#" class="navbar-brand text-light">...</a></li>
+                <?php
+                if($_SESSION['account'] == null){
+                    echo '<li><input type="button"
+                                class="btn btn-primary"
+                                 data-bs-toggle="modal"
+                                  data-bs-target="#exampleModal" value="Войти"/></li>';
+                }
+                else{
+                    echo '<li><a href="check_sign.php" class="navbar-brand text-light">Выйти</a></li>';
+                }
+                ?>
             </ul>
         </div>
     </div>
@@ -65,7 +78,9 @@ ini_set('display_errors','ON');
         </div>
     </div>
     <?php
-    echo complaint_list();
+    if($_SESSION['account'] != null){
+        echo complaint_list();
+    }
     ?>
 
     <div class="clearfix"></div>

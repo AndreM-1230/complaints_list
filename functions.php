@@ -59,7 +59,7 @@
                 else{
                     $return .="<td></td>";
                 }
-            $return .=" </tr>";
+            $return .="</tr>";
         }
     $return .="</tbody></table>";
 
