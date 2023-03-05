@@ -1,7 +1,7 @@
 <?php
 
 ?>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="signModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action='check_sign.php' id="idf" method='post'>
@@ -34,3 +34,4 @@
         </div>
     </div>
 </div>
+

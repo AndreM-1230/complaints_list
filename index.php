@@ -59,7 +59,7 @@ if(isset($_SESSION['account']) == 0)
                     echo '<li><input type="button"
                                 class="btn btn-primary"
                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal" value="Войти"/></li>';
+                                  data-bs-target="#signModal" value="Войти"/></li>';
                 }
                 else{
                     echo '<li><a class="navbar-brand text-light">Привет, '.$_SESSION["account"][0]["login"].'!</a></li>
@@ -80,7 +80,13 @@ if(isset($_SESSION['account']) == 0)
     </div>
     <?php
     if($_SESSION['account'] != null){
-        echo complaint_list();
+        if($_SESSION['account'][0]['user_stat'] == 0){
+            echo complaint_list();
+        }
+        else{
+            echo short_complaint_list();
+        }
+
     }
     ?>
 
