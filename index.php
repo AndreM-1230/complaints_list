@@ -3,13 +3,17 @@ session_start();
 include('env.php');
 include('functions.php');
 include('sign_modal.php');
+include ('pages.php');
 ini_set("memory_limit","6000M");
 ini_set('mysql.connect_timeout', 7200); // таймаут соединения с БД (сек.)
 ini_set('max_execution_time', 7200);    // таймаут php-скрипта
 ini_set('display_errors','ON');
-if(isset($_SESSION['account']) == 0)
+if(!isset($_SESSION['account']))
     $_SESSION['account'] = null;
+if(!isset($_SESSION['page']))
+    $_SESSION['page'] = 1;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -79,6 +83,7 @@ if(isset($_SESSION['account']) == 0)
         </div>
     </div>
     <?php
+
     if($_SESSION['account'] != null){
         if($_SESSION['account'][0]['user_stat'] == 0){
             echo complaint_list();

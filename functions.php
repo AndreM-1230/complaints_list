@@ -30,12 +30,29 @@
         return ($arr);
     }
 
+    function sql_length($sql) :int
+    {
+        global $db;
+        $res = $db->query($sql);
+        $count = $res->fetchColumn();
+        return $count;
+    }
+
     sql_connect(); // соединение с базой.
     // Условия по GET-запросам
 
+
+    function get_complaints_list_data(): array
+    {
+        if(!isset($_SESSION['selsize']))
+            $_SESSION['selsize']=20;
+        $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list");
+        $complaints_arr=sqltab("SELECT * FROM complaints_list ORDER BY id DESC LIMIT $_SESSION[page], $_SESSION[selsize]");
+        return $complaints_arr;
+    }
     function complaint_list():string
     {
-        $complaints_arr=sqltab("SELECT * FROM complaints_list");
+        $complaints_arr=get_complaints_list_data();
         $return ="<table class='table
                          table-hover
                          table-borderless
@@ -82,7 +99,7 @@
 
     function short_complaint_list() :string
     {
-        $complaints_arr=sqltab("SELECT * FROM complaints_list");
+        $complaints_arr=get_complaints_list_data();
         $return ="<table class='table
                          table-hover
                          table-borderless
@@ -94,7 +111,6 @@
                 <td>Ответ:</td></tr>";
         foreach($complaints_arr as $value){
             $user = sqltab("SELECT login FROM users WHERE id = $value[user]");
-            $fixer = sqltab("SELECT login FROM users WHERE id = $value[admin]");
             $status = sqltab("SELECT status_name FROM status WHERE id = $value[status]");
             $return .="<tr>
                 <td>". $value['id'] ."</td>
@@ -119,8 +135,9 @@
             }
             $return .="</tr>";
         }
-        $return .="</tbody></table>";
 
+        $return .="</tbody></table>";
+        $return .= Pages($_SESSION['array_count'],$_SESSION['selsize'],$_SESSION['page']);
         return $return;
     }
 
