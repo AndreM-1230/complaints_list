@@ -37,20 +37,19 @@
         $count = $res->fetchColumn();
         return $count;
     }
-
     sql_connect(); // соединение с базой.
     // Условия по GET-запросам
-
-
     function get_complaints_list_data(): array
     {
         if(!isset($_SESSION['complaints_type']))
             $_SESSION['complaints_type'] = 1;
         if(!isset($_SESSION['selsize']))
-            $_SESSION['selsize']=20;
+            $_SESSION['selsize']=5;
         $firstrow=$_SESSION['selsize']*($_SESSION['page']-1);
+        if(!isset($_SESSION['complaints_type']))
+            $_SESSION['complaints_type']=1;
         if($_SESSION['complaints_type'] == 2){
-            $user = $_SESSION['account'][0]['login'];
+            $user = $_SESSION['account'][0]['id'];
             $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE user = $user");
             $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE user = $user ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
         }
@@ -114,27 +113,39 @@
     }
 
     function short_complaint_list() :string
-    {
+    {   switch ($_SESSION['complaints_type']){
+        case 1:
+            $btn_all  = 'btn-primary disabled';
+            $btn_user = 'btn-outline-primary';
+            break;
+        case 2:
+            $btn_all  = 'btn-outline-primary';
+            $btn_user = 'btn-primary disabled';
+            break;
+        default:
+            $btn_all = '';
+            $btn_user = '';
+            break;
+        }
         $complaints_arr=get_complaints_list_data();
-        $return ="<nav class='navbar navbar-expand-lg navbar-light bg-light'>
-  <div class='container-fluid'>
-    <a class='navbar-brand' href='#'>Жалобы?</a>
-    <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Переключатель навигации'>
-      <span class='navbar-toggler-icon'></span>
-    </button>
-    <div class='collapse navbar-collapse' id='navbarNav'>
-      <ul class='navbar-nav'>
-        <li class='nav-item'>
-          <input class='nav-link' type='submit' id='com_sel' aria-current='page' value='Показать все' onclick='com_sel(1)'/>
-        </li>
-        <li class='nav-item'>
-          <input class='nav-link' type='submit' id='com_sel' aria-current='page' value='Показать мои' onclick='com_sel(2)'/>
-        </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
+        $return ="<div class='btn-group' role='group' aria-label='Basic outlined example'>
+                    <input class='btn $btn_all'
+                     type='submit'
+                      id='com_sel'
+                       aria-current='page'
+                        value='Показать все'
+                         onclick='com_sel(1)'/>
+                    <input class='btn $btn_user'
+                     type='submit'
+                      id='com_sel'
+                       aria-current='page'
+                        value='Показать мои'
+                         onclick='com_sel(2)'/>
+                    <input class='btn btn-outline-primary'
+                     type='button'
+                      data-bs-toggle='modal'
+                       data-bs-target='#new_complaint' value='Создать жалобу'/>
+                  </div>
                   <table class='table
                          table-hover
                          table-borderless
@@ -174,5 +185,14 @@
         $return .="</tbody></table>";
         $return .= Pages($_SESSION['array_count'],$_SESSION['selsize'],$_SESSION['page']);
         return $return;
+    }
+
+    function imagine_load():void
+    {
+        echo "<div class='d-flex justify-content-center'>
+                <div class='spinner-border' role='status'>
+                    <span class='visually-hidden'>Загрузка...</span>
+                </div>
+        </div>";
     }
 

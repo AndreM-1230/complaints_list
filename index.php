@@ -2,7 +2,8 @@
 session_start();
 include('env.php');
 include('functions.php');
-include('sign_modal.php');
+include('sign_modal.html');
+include ('new_complaint.html');
 include('pages/pages.php');
 ini_set("memory_limit","6000M");
 ini_set('mysql.connect_timeout', 7200); // таймаут соединения с БД (сек.)
@@ -33,11 +34,7 @@ if(!isset($_SESSION['account']))
     <script type="text/javascript" src="js/script.js"></script>
     <script type="text/javascript" src="pages/pages.js"></script>
     <script type="text/javascript">
-        function com_sel(com_sel) {
-            //let com_sel=document.getElementById('com_sel').selectedIndex;
-            location.href = './comment_list/select_complaints_type.php?com_sel='+ com_sel;
-            console.log(com_sel);
-        }
+
 
     </script>
 </head>

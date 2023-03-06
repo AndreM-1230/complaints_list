@@ -4,7 +4,7 @@ if(!isset($_SESSION['page']))
 function Pages($array_count, $selsize, $pages): string
 {
     $return = '';
-    $page_size = [20,40,60];
+    $page_size = [5,15,30];
     $return .= "   <form action='pages_serv.php' method='post' id='page_id'></form>
                         <nav class='navbar col-lg-6'>
 
