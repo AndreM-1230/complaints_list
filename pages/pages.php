@@ -5,7 +5,7 @@ function Pages($array_count, $selsize, $pages): string
 {
     $return = '';
     $page_size = [5,15,30];
-    $return .= "   <form action='pages_serv.php' method='post' id='page_id'></form>
+    $return .= "   <form action='/pages/pages_serv.php' method='post' id='page_id'></form>
                         <nav class='navbar col-lg-6'>
 
                             <select class='form-select form-select-sm w-25' id='selsize' onchange='selsize()'>";
