@@ -3,15 +3,13 @@ session_start();
 include('env.php');
 include('functions.php');
 include('sign_modal.php');
-include ('pages.php');
+include('pages/pages.php');
 ini_set("memory_limit","6000M");
 ini_set('mysql.connect_timeout', 7200); // таймаут соединения с БД (сек.)
 ini_set('max_execution_time', 7200);    // таймаут php-скрипта
 ini_set('display_errors','ON');
 if(!isset($_SESSION['account']))
     $_SESSION['account'] = null;
-if(!isset($_SESSION['page']))
-    $_SESSION['page'] = 1;
 ?>
 
 
@@ -33,8 +31,13 @@ if(!isset($_SESSION['page']))
 
     <script src="./js/jquery.min.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="pages/pages.js"></script>
     <script type="text/javascript">
-
+        function com_sel(com_sel) {
+            //let com_sel=document.getElementById('com_sel').selectedIndex;
+            location.href = './comment_list/select_complaints_type.php?com_sel='+ com_sel;
+            console.log(com_sel);
+        }
 
     </script>
 </head>
@@ -75,13 +78,7 @@ if(!isset($_SESSION['page']))
     </div>
 </div>
 <div class="container">
-    <div class="page-header" id="banner">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1>Жалобы?</h1>
-            </div>
-        </div>
-    </div>
+
     <?php
 
     if($_SESSION['account'] != null){

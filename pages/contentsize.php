@@ -1,7 +1,6 @@
 <?php
 //ВЫБОР КОЛИЧЕСТВА ОТОБРАЖАЕМЫХ СТРОК ТАБЛИЦЫ
 	session_start();
-	$_SESSION["newsession"]='';
 
 	switch ($_GET['selsize']) {
 		case '0':

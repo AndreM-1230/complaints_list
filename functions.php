@@ -44,21 +44,37 @@
 
     function get_complaints_list_data(): array
     {
+        if(!isset($_SESSION['complaints_type']))
+            $_SESSION['complaints_type'] = 1;
         if(!isset($_SESSION['selsize']))
             $_SESSION['selsize']=20;
-        $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list");
-        $complaints_arr=sqltab("SELECT * FROM complaints_list ORDER BY id DESC LIMIT $_SESSION[page], $_SESSION[selsize]");
+        $firstrow=$_SESSION['selsize']*($_SESSION['page']-1);
+        if($_SESSION['complaints_type'] == 2){
+            $user = $_SESSION['account'][0]['login'];
+            $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE user = $user");
+            $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE user = $user ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+        }
+        else{
+            $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list");
+            $complaints_arr=sqltab("SELECT * FROM complaints_list ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+        }
         return $complaints_arr;
     }
     function complaint_list():string
     {
         $complaints_arr=get_complaints_list_data();
-        $return ="<table class='table
+        $return ="<div class='page-header' id='banner'>
+                        <div class='row'>
+                            <div class='col-lg-12'>
+                                <h1>Жалобы?</h1>
+                            </div>
+                        </div>
+                  </div>
+                  <table class='table
                          table-hover
                          table-borderless
-                         align-middle
-                         table-dark' data-tblname='tbl' style='text-align:center;'><tbody>
-            <tr><td>#</td>
+                         align-middle' data-tblname='tbl' style='text-align:center;'><tbody>
+            <tr class='table-dark'><td>#</td>
                 <td>Содержание:</td>
                 <td>Статус:</td>
                 <td>Пользователь:</td>
@@ -93,14 +109,33 @@
             $return .="</tr>";
         }
     $return .="</tbody></table>";
-
+        $return .= Pages($_SESSION['array_count'],$_SESSION['selsize'],$_SESSION['page']);
         return $return;
     }
 
     function short_complaint_list() :string
     {
         $complaints_arr=get_complaints_list_data();
-        $return ="<table class='table
+        $return ="<nav class='navbar navbar-expand-lg navbar-light bg-light'>
+  <div class='container-fluid'>
+    <a class='navbar-brand' href='#'>Жалобы?</a>
+    <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Переключатель навигации'>
+      <span class='navbar-toggler-icon'></span>
+    </button>
+    <div class='collapse navbar-collapse' id='navbarNav'>
+      <ul class='navbar-nav'>
+        <li class='nav-item'>
+          <input class='nav-link' type='submit' id='com_sel' aria-current='page' value='Показать все' onclick='com_sel(1)'/>
+        </li>
+        <li class='nav-item'>
+          <input class='nav-link' type='submit' id='com_sel' aria-current='page' value='Показать мои' onclick='com_sel(2)'/>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+                  <table class='table
                          table-hover
                          table-borderless
                          align-middle' data-tblname='tbl' style='text-align:center;'><tbody>
