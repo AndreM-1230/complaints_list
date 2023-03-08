@@ -114,9 +114,11 @@
                 }
                 else{
                     if(isset($fixer[0]['login']) and $fixer[0]['login'] == $_SESSION['account'][0]['login']){
-                        $return .="<td><input type='submit'
+                        $return .="<td><input type='button'
+                                    id='$value[id]'
                                     name='$value[id]'
                                     class='btn btn-outline-warning'
+                                    onclick='comment_form(this)'
                                     value='Ответить'/></td>";
                     }
                     else{
@@ -163,7 +165,8 @@
                     <input class='btn btn-outline-primary'
                      type='button'
                       data-bs-toggle='modal'
-                       data-bs-target='#new_complaint' value='Создать жалобу'/>
+                      name='create_complaint'
+                       data-bs-target='#my_personal_form' value='Создать жалобу'/>
                   </div>
                   <table class='table
                          table-hover

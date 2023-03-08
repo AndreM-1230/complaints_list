@@ -2,8 +2,7 @@
 session_start();
 include('env.php');
 include('functions.php');
-include('sign_modal.html');
-include('new_complaint.html');
+include('forms.php');
 include('pages/pages.php');
 ini_set("memory_limit","6000M");
 ini_set('mysql.connect_timeout', 7200); // таймаут соединения с БД (сек.)
@@ -63,7 +62,8 @@ if(!isset($_SESSION['account']))
                     echo '<li><input type="button"
                                 class="btn btn-primary"
                                  data-bs-toggle="modal"
-                                  data-bs-target="#signModal" value="Войти"/></li>';
+                                 name="sign"
+                                  data-bs-target="#my_personal_form" value="Войти"/></li>';
                 }
                 else{
                     echo '<li><a class="navbar-brand text-light">Привет, '.$_SESSION["account"][0]["login"].'!</a></li>
