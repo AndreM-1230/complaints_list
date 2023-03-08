@@ -25,7 +25,7 @@
             $sth->execute();
             $arr = $sth->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e){
-            var_dump($e);
+            //var_dump($e);
         }
         return ($arr);
     }
@@ -97,13 +97,32 @@
                     $return .="<td class='table-success'>" .  $status[0]['status_name'] ." </td>";
                     break;
             }
-                $return .="<td>" .  $user[0]['login'] ." </td>
-                <td>" .  $fixer[0]['login'] ." </td>";
+                $return .="<td>" .  $user[0]['login'] ." </td>";
+                if(!isset($fixer[0]['login'])){
+                    $return .="<td><form action='take_task.php' method='post'>
+                                    <input type='submit'
+                                    name='$value[id]'
+                                    class='btn btn-outline-warning'
+                                    value='Взять'/>
+                                </form></td>";
+                }
+                else{
+                    $return .="<td>" .  $fixer[0]['login'] ." </td>";
+                }
                 if($value['fix_comment'] != NULL){
                     $return .="<td>" .  $value['fix_comment'] ." </td>";
                 }
                 else{
-                    $return .="<td></td>";
+                    if(isset($fixer[0]['login']) and $fixer[0]['login'] == $_SESSION['account'][0]['login']){
+                        $return .="<td><input type='submit'
+                                    name='$value[id]'
+                                    class='btn btn-outline-warning'
+                                    value='Ответить'/></td>";
+                    }
+                    else{
+                        $return .="<td></td>";
+                    }
+
                 }
             $return .="</tr>";
         }

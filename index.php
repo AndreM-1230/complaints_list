@@ -3,7 +3,7 @@ session_start();
 include('env.php');
 include('functions.php');
 include('sign_modal.html');
-include ('new_complaint.html');
+include('new_complaint.html');
 include('pages/pages.php');
 ini_set("memory_limit","6000M");
 ini_set('mysql.connect_timeout', 7200); // таймаут соединения с БД (сек.)

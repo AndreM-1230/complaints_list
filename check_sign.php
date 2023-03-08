@@ -1,6 +1,5 @@
 <?php
 session_start();
-imagine_load();
 if($_SESSION['account'] == null){
     include('env.php');
     include('functions.php');

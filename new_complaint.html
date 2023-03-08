@@ -7,7 +7,7 @@
      aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action='new_complaint.php' id="idf" method='post'>
+      <form action='new_complaint.php' id="idfc" method='post'>
       </form>
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Новая жалоба</h5>
@@ -16,12 +16,12 @@
       <div class="modal-body">
         <div class="form-group">
           <label for="exampleFormControlTextarea1">Введи текст:</label>
-          <textarea class="form-control" form="idf" id="exampleFormControlTextarea1" rows="5" required></textarea>
+          <textarea class="form-control" form="idfc" name="text" id="exampleFormControlTextarea1" rows="5" required></textarea>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-        <input form="idf" type="submit" class="btn btn-primary" value="Отправить"/>
+        <input form="idfc" type="submit" class="btn btn-primary" value="Отправить"/>
       </div>
     </div>
   </div>
