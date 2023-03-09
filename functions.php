@@ -83,9 +83,46 @@
             $user = sqltab("SELECT login FROM users WHERE id = $value[user]");
             $fixer = sqltab("SELECT login FROM users WHERE id = $value[admin]");
             $status = sqltab("SELECT status_name FROM status WHERE id = $value[status]");
+
+
+
             $return .="<tr>
-                <td>". $value['id'] ."</td>
-                <td>" .  $value['complaint_text'] ." </td>";
+                <td>". $value['id'] ."</td>";
+            if(strlen($value['complaint_text']) > 15){
+                $accordionID = 'acc' . $value['id'] . 'id';
+                $data_accordionID = '#' . $accordionID;
+
+                $collapse_accordion = 'coll' . $value['id'] . 'collapse';
+                $data_collapse = '#' . $collapse_accordion;
+
+                $heading_accordion = 'head' . $value['id'] . 'heading';
+
+                $data_length =substr($value['complaint_text'], 0, 15);
+
+                $return .="<td>
+                    <div class='accordion' id='$accordionID' >
+                        <div class='accordion-item'>
+                          <h2 class='accordion-header' id='$heading_accordion'>
+                            <button class='accordion-button'
+                             type='button' 
+                             data-bs-toggle='collapse' 
+                             data-bs-target='$data_collapse' 
+                             aria-expanded='true' 
+                             aria-controls='$collapse_accordion'>
+                              $data_length
+                            </button>
+                          </h2>
+                          <div id='$collapse_accordion' class='accordion-collapse collapse' aria-labelledby='$heading_accordion' data-bs-parent='$data_accordionID'>
+                            <div class='accordion-body' style='max-width: 45ch;'>$value[complaint_text]</div>
+                          </div>
+                        </div>
+                    </div>
+                </td>";
+            }
+            else{
+                $return .="<td>$value[complaint_text]</td>";
+            }
+
             switch ($status[0]['status_name']){
                 case 'Ожидает':
                     $return .="<td class='table-light'>" .  $status[0]['status_name'] ." </td>";

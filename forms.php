@@ -44,7 +44,7 @@ echo "<div class='modal fade'
             else{
                 echo "<div class='form-group'>
                         <label for='exampleFormControlTextarea1'>Введи текст:</label>
-                        <textarea class='form-control' form='idf' name='text' id='exampleFormControlTextarea1' rows='5' required></textarea>
+                        <textarea maxlength='200' class='form-control' form='idf' name='text' id='exampleFormControlTextarea1' rows='5' required></textarea>
                     </div>";
             }
 
