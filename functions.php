@@ -72,13 +72,14 @@
                   <table class='table
                          table-hover
                          table-borderless
-                         align-middle' data-tblname='tbl' style='text-align:center;'><tbody>
-            <tr class='table-dark'><td>#</td>
-                <td>Содержание:</td>
-                <td>Статус:</td>
-                <td>Пользователь:</td>
-                <td>Фиксер:</td>
-                <td>Ответ:</td></tr>";
+                         align-middle col-lg-12' data-tblname='tbl' style='text-align:center;'><tbody>
+            <tr class='table-dark'>
+                <td class='col-lg-1'>#</td>
+                <td class='col-lg-3'>Содержание:</td>
+                <td class='col-lg-1'>Статус:</td>
+                <td class='col-lg-1'>Пользователь:</td>
+                <td class='col-lg-1'>Фиксер:</td>
+                <td class='col-lg-3'>Ответ:</td></tr>";
         foreach($complaints_arr as $value){
             $user = sqltab("SELECT login FROM users WHERE id = $value[user]");
             $fixer = sqltab("SELECT login FROM users WHERE id = $value[admin]");
@@ -99,25 +100,13 @@
 
                 $data_length =substr($value['complaint_text'], 0, 15);
 
-                $return .="<td>
-                    <div class='accordion' id='$accordionID' >
-                        <div class='accordion-item'>
-                          <h2 class='accordion-header' id='$heading_accordion'>
-                            <button class='accordion-button'
-                             type='button' 
-                             data-bs-toggle='collapse' 
-                             data-bs-target='$data_collapse' 
-                             aria-expanded='true' 
-                             aria-controls='$collapse_accordion'>
-                              $data_length
-                            </button>
-                          </h2>
-                          <div id='$collapse_accordion' class='accordion-collapse collapse' aria-labelledby='$heading_accordion' data-bs-parent='$data_accordionID'>
-                            <div class='accordion-body' style='max-width: 45ch;'>$value[complaint_text]</div>
-                          </div>
-                        </div>
-                    </div>
-                </td>";
+                $return .= accordion($accordionID,
+                    $data_accordionID,
+                    $collapse_accordion,
+                    $data_collapse,
+                    $heading_accordion,
+                    $data_length,
+                    $value['complaint_text']);
             }
             else{
                 $return .="<td>$value[complaint_text]</td>";
@@ -147,7 +136,29 @@
                     $return .="<td>" .  $fixer[0]['login'] ." </td>";
                 }
                 if($value['fix_comment'] != NULL){
-                    $return .="<td>" .  $value['fix_comment'] ." </td>";
+                    if(strlen($value['fix_comment']) > 15){
+                        $accordionID = 'facc' . $value['id'] . 'id';
+                        $data_accordionID = '#' . $accordionID;
+
+                        $collapse_accordion = 'fcoll' . $value['id'] . 'collapse';
+                        $data_collapse = '#' . $collapse_accordion;
+
+                        $heading_accordion = 'fhead' . $value['id'] . 'heading';
+
+                        $data_length =substr($value['fix_comment'], 0, 15);
+
+                        $return .= accordion($accordionID,
+                            $data_accordionID,
+                            $collapse_accordion,
+                            $data_collapse,
+                            $heading_accordion,
+                            $data_length,
+                            $value['fix_comment']);
+                    }
+                    else{
+                        $return .="<td>" .  $value['fix_comment'] ." </td>";
+                    }
+
                 }
                 else{
                     if(isset($fixer[0]['login']) and $fixer[0]['login'] == $_SESSION['account'][0]['login']){
@@ -168,6 +179,35 @@
     $return .="</tbody></table>";
         $return .= Pages($_SESSION['array_count'],$_SESSION['selsize'],$_SESSION['page']);
         return $return;
+    }
+
+    function accordion($accordionID,
+                       $data_accordionID,
+                       $collapse_accordion,
+                       $data_collapse,
+                       $heading_accordion,
+                       $data_length,
+                       $text):string
+    {
+        return "<td style='max-width: 45ch !important;'>
+                    <div class='accordion' id='$accordionID' style='max-width: 45ch !important;' >
+                        <div class='accordion-item'>
+                          <h2 class='accordion-header' id='$heading_accordion'>
+                            <button class='accordion-button'
+                             type='button' 
+                             data-bs-toggle='collapse' 
+                             data-bs-target='$data_collapse' 
+                             aria-expanded='true' 
+                             aria-controls='$collapse_accordion'>
+                              $data_length
+                            </button>
+                          </h2>
+                          <div id='$collapse_accordion' class='accordion-collapse collapse' aria-labelledby='$heading_accordion' data-bs-parent='$data_accordionID'>
+                            <div class='accordion-body' style='text-align:left;'>$text</div>
+                          </div>
+                        </div>
+                    </div>
+                </td>";
     }
 
     function short_complaint_list() :string

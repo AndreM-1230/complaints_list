@@ -25,7 +25,7 @@ function comment_form(data){
         "            <div class='modal-body'>" +
         "            <div class='form-group'>\n" +
         "                        <label for='exampleFormControlTextarea1'>Введи текст:</label>\n" +
-        "                        <textarea class='form-control' form='idfc' name='text' id='exampleFormControlTextarea1' rows='5' required></textarea>\n" +
+        "                        <textarea maxlength='200' class='form-control' form='idfc' name='text' id='exampleFormControlTextarea1' rows='5' required></textarea>\n" +
         "                    </div></div>\n" +
         "            <div class='modal-footer'>\n" +
         "                <button type='button' class='btn btn-secondary' onclick='del_modal()'>Закрыть</button>\n" +
