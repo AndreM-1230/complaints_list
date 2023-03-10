@@ -98,7 +98,7 @@
 
                 $heading_accordion = 'head' . $value['id'] . 'heading';
 
-                $data_length =substr($value['complaint_text'], 0, 15);
+                $data_length =mb_substr($value['complaint_text'], 0, 15);
 
                 $return .= accordion($accordionID,
                     $data_accordionID,
@@ -145,7 +145,7 @@
 
                         $heading_accordion = 'fhead' . $value['id'] . 'heading';
 
-                        $data_length =substr($value['fix_comment'], 0, 15);
+                        $data_length =mb_substr($value['fix_comment'], 0, 15);
 
                         $return .= accordion($accordionID,
                             $data_accordionID,
@@ -190,7 +190,7 @@
                        $text):string
     {
         return "<td style='max-width: 45ch !important;'>
-                    <div class='accordion' id='$accordionID' style='max-width: 45ch !important;' >
+                    <div class='accordion accordion-flush' id='$accordionID' style='max-width: 45ch !important;' >
                         <div class='accordion-item'>
                           <h2 class='accordion-header' id='$heading_accordion'>
                             <button class='accordion-button'
@@ -199,10 +199,14 @@
                              data-bs-target='$data_collapse' 
                              aria-expanded='true' 
                              aria-controls='$collapse_accordion'>
-                              $data_length
+                              $data_length ...
                             </button>
                           </h2>
-                          <div id='$collapse_accordion' class='accordion-collapse collapse' aria-labelledby='$heading_accordion' data-bs-parent='$data_accordionID'>
+                          <div id='$collapse_accordion'
+                          class='accordion-collapse collapse'
+                          aria-labelledby='$heading_accordion'
+                          data-bs-parent='$data_accordionID'
+                          style=''>
                             <div class='accordion-body' style='text-align:left;'>$text</div>
                           </div>
                         </div>
