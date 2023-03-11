@@ -60,19 +60,21 @@
     }
     function complaint_list():string
     {
-        switch ($_SESSION['complaints_type']){
-            case 1:
-                $btn_all  = 'btn-primary disabled';
-                $btn_user = 'btn-outline-primary';
-                break;
-            case 2:
-                $btn_all  = 'btn-outline-primary';
-                $btn_user = 'btn-primary disabled';
-                break;
-            default:
-                $btn_all = '';
-                $btn_user = '';
-                break;
+        if($_SESSION['account'][0]['user_stat'] != 0) {
+            switch ($_SESSION['complaints_type']) {
+                case 1:
+                    $btn_all = 'btn-primary disabled';
+                    $btn_user = 'btn-outline-primary';
+                    break;
+                case 2:
+                    $btn_all = 'btn-outline-primary';
+                    $btn_user = 'btn-primary disabled';
+                    break;
+                default:
+                    $btn_all = '';
+                    $btn_user = '';
+                    break;
+            }
         }
         $complaints_arr=get_complaints_list_data();
         $return ="<div class='page-header' id='banner'>
@@ -123,9 +125,8 @@
                 $return .="<td class='col-lg-3'>Ответ:</td></tr>";
         foreach($complaints_arr as $value){
             $user = sqltab("SELECT login FROM users WHERE id = $value[user]");
-            if(!isset($value['admin'])){
                 $fixer = sqltab("SELECT login FROM users WHERE id = $value[admin]");
-            }
+
             $status = sqltab("SELECT status_name FROM status WHERE id = $value[status]");
 
             $return .="<tr>

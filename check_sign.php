@@ -14,7 +14,7 @@ if($_SESSION['account'] == null){
     $_SESSION['account'] = $user;
 }
 else{
-    $_SESSION['account'] = null;
+    session_unset();
 }
 header('Location: index.php');
 
