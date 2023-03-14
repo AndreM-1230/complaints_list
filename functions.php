@@ -40,21 +40,44 @@
     // Условия по GET-запросам
     function get_complaints_list_data(): array
     {
-        if(!isset($_SESSION['complaints_type']))
-            $_SESSION['complaints_type'] = 1;
         if(!isset($_SESSION['selsize']))
             $_SESSION['selsize']=5;
         $firstrow=$_SESSION['selsize']*($_SESSION['page']-1);
-        if(!isset($_SESSION['complaints_type']))
-            $_SESSION['complaints_type']=1;
-        if($_SESSION['complaints_type'] == 2){
-            $user = $_SESSION['account'][0]['id'];
-            $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE user = $user");
-            $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE user = $user ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
-        }
-        else{
-            $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list");
-            $complaints_arr=sqltab("SELECT * FROM complaints_list ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+
+        if($_SESSION['account'][0]['user_stat'] != 0){
+            if(!isset($_SESSION['complaints_type']))
+                $_SESSION['complaints_type'] = 1;
+            if($_SESSION['complaints_type'] == 2){
+                $user = $_SESSION['account'][0]['id'];
+                $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE user = $user");
+                $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE user = $user ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+            }
+            else{
+                $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list");
+                $complaints_arr=sqltab("SELECT * FROM complaints_list ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+            }
+        }else{
+            if(!isset($_SESSION['complaints_sort']))
+                $_SESSION['complaints_sort'] = 1;
+            switch ($_SESSION['complaints_sort']){
+                case 1:
+                    $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list");
+                    $complaints_arr=sqltab("SELECT * FROM complaints_list ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+                    break;
+                case 2:
+                    $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE status = 1");
+                    $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE status = 1 ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+                    break;
+                case 3:
+                    $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE status = 2");
+                    $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE status = 2 ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+                    break;
+                case 4:
+                    $_SESSION['array_count']= sql_length("SELECT COUNT(*) FROM complaints_list WHERE status = 3");
+                    $complaints_arr=sqltab("SELECT * FROM complaints_list WHERE status = 3 ORDER BY id DESC LIMIT $firstrow, $_SESSION[selsize]");
+                    break;
+
+            }
         }
         return $complaints_arr;
     }
@@ -101,7 +124,32 @@
                        data-bs-target='#my_personal_form' value='Создать жалобу'/>
                   </div>";
         }else{
-            $return .=" <h1>Жалобы?</h1>";
+            $return .=" <div class='btn-group' role='group' aria-label='Basic outlined example'>
+                    <input class='btn btn-outline-primary'
+                     type='submit'
+                      id='com_sel'
+                       aria-current='page'
+                        value='Показать все'
+                         onclick='admin_sort(1)'/>
+                    <input class='btn btn-outline-primary'
+                     type='submit'
+                      id='com_sel'
+                       aria-current='page'
+                        value='Показать не принятые'
+                         onclick='admin_sort(2)'/>
+                    <input class='btn btn-outline-primary'
+                     type='submit'
+                      id='com_sel'
+                       aria-current='page'
+                        value='Показать в работе'
+                         onclick='admin_sort(3)'/>
+                         <input class='btn btn-outline-primary'
+                     type='submit'
+                      id='com_sel'
+                       aria-current='page'
+                        value='Показать выполненные'
+                         onclick='admin_sort(4)'/>
+                  </div>";
         }
 
                             $return .="</div>
@@ -189,7 +237,7 @@
                         $user[0]['login'] == $_SESSION['account'][0]['login'])
                     {
                         $rating = null;
-                        $return .= 'Оцените ответ: ' . rating($rating);
+                        $return .= 'Оцените ответ: ' . rating($value['id']);
                     }
                 }
                 else{
@@ -285,21 +333,21 @@
 
     function rating($id):string
     {   $idf = $id . 'fr';
-            return  "<form action='set_rating.php' method='post' id='$idf'></form>
-                <div class='star-rating'>
-                <div class='star-rating__wrap'>
-                <input class='star-rating__input' form='$idf' id='$idf-5' type='submit' name=$id value='5'>
-                <label class='star-rating__ico fa fa-star-o fa-lg' for='$idf-5' title='5'></label>
-                <input class='star-rating__input' form='$idf' id='$idf-4' type='submit' name=$id value='4'>
-                <label class='star-rating__ico fa fa-star-o fa-lg' for='$idf-4' title='4'></label>
-                <input class='star-rating__input' form='$idf' id='$idf-3' type='submit' name=$id value='3'>
-                <label class='star-rating__ico fa fa-star-o fa-lg' for='$idf-3' title='3'></label>
-                <input class='star-rating__input' form='$idf' id='$idf-2' type='submit' name=$id value='2'>
-                <label class='star-rating__ico fa fa-star-o fa-lg' for='$idf-2' title='2'></label>
-                <input class='star-rating__input' form='$idf' id='$idf-1' type='submit' name=$id value='1'>
-                <label class='star-rating__ico fa fa-star-o fa-lg' for='$idf-1' title='1'></label>
-                </div>
-                </div>";
+        $count = 5;
+        $return =  "<form action='set_rating.php' method='post' id='$idf'></form>
+            <div class='star-rating'>
+            <div class='star-rating__wrap'>
+            <input form='$idf' id='$idf-6' type='text' name='$id' hidden />";
+        while($count > 0){
+            $idinp =$id . $count;
+            $return .="<input class='star-rating__input' form='$idf' id='$idinp' name='$id' type='submit' value=$count />
+            <label class='star-rating__ico fa fa-star-o fa-lg' for='$idinp' title=$count></label>";
+            $count -=1;
+        }
+        $return .="
+            </div>
+            </div>";
+        return $return;
     }
 
 

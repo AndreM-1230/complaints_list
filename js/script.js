@@ -1,6 +1,9 @@
 function com_sel(com_sel) {
     location.href = './select_complaints_type.php?com_sel='+ com_sel;
-    console.log(com_sel);
+}
+
+function admin_sort(admin_sort){
+    location.href = './complaints_sort.php?admin_sort='+ admin_sort;
 }
 
 function comment_form(data){
